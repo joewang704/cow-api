@@ -117,6 +117,13 @@ export const getItems = () => {
 
 export const addItem = ({ text, start_time = null, end_time = null, checkable, group_id }) => {
   return queryOnce(`INSERT INTO items (text, start_time, end_time, checkable, group_id)
-        VALUES ('${text}', ${start_time}, ${end_time}, ${checkable}, ${group_id})
-        RETURNING id;`)
+    VALUES ('${text}', ${start_time}, ${end_time}, ${checkable}, ${group_id})
+    RETURNING id;`)
+}
+
+export const deleteItem = (id) => {
+  return queryOnce(
+    `DELETE FROM items WHERE id = ${id}
+    RETURNING id;`
+  )
 }

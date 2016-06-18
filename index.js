@@ -17,7 +17,6 @@ app.get('/', (req, res) => {
 })
 
 app.get('/groups', (req, res) => {
-  console.log(req)
   db.getGroups().then((groups) => {
     res.send(JSON.stringify(groups))
   }).catch((err) => {
@@ -63,6 +62,16 @@ app.get('/items', (req, res) => {
 
 app.post('/items', (req, res) => {
   db.addItem(req.body)
+    .then((result) => {
+      res.send(result)
+    })
+    .catch((error) => {
+      res.send(error)
+    })
+})
+
+app.delete('/items/:id', (req, res) => {
+  db.deleteItem(req.params.id)
     .then((result) => {
       res.send(result)
     })
