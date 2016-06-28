@@ -11,9 +11,9 @@ const conString = `postgres://${user}:${pass}@${serverAddr}/${database}`
 
 const db = pgp()(conString)
 
-export const query = (query) => db.any(query)
+export const query = (query, params) => db.any(query, params)
 
-export const queryOnce = (query) => db.one(query)
+export const queryOnce = (query, params) => db.one(query, params)
 
 export const queryC = (query) => {
   pg.connect(conString, (err, client, done) => {
@@ -115,10 +115,10 @@ export const getItems = () => {
   return query('SELECT * from items')
 }
 
-export const addItem = ({ text, start_time = null, end_time = null, checkable, group_id }) => {
+export const addItem = ({ text, start_time = null, end_time = null, checkable, group_id = null }) => {
   return queryOnce(`INSERT INTO items (text, start_time, end_time, checkable, group_id)
-    VALUES ('${text}', ${start_time}, ${end_time}, ${checkable}, ${group_id})
-    RETURNING id;`)
+    VALUES ($1, ${start_time}, ${end_time}, ${checkable}, ${group_id})
+    RETURNING id;`, [text])
 }
 
 export const addItemWithId = (id, { text, start_time = null, end_time = null, checkable, group_id }) => {
