@@ -60,27 +60,32 @@ app.get('/items', (req, res) => {
   })
 })
 
+app.post('/items', (req, res) => {
+  db.addItem(req.body)
+    .then((result) => {
+      res.send(result)
+    })
+    .catch((error) => {
+      res.send(error)
+    })
+})
+
+
 app.post('/items/:id', (req, res) => {
-  const id = req.params.id
-  if (id > 0) {
-      db.addItemWithId(id, req.body)
-      .then((result) => {
-        res.send(result)
-      })
-      .catch((error) => {
-        res.send(error)
-      })
-  }
-  else {
-    db.addItem(req.body)
-      .then((result) => {
-        res.send(result)
-      })
-      .catch((error) => {
-        res.send(error)
-      })
+  const id = parseInt(req.params.id)
+  if (Number.isInteger(id)) {
+    db.addItemWithId(id, req.body)
+    .then((result) => {
+      res.send(result)
+    })
+    .catch((error) => {
+      res.send(error)
+    })
+  } else {
+    res.send('Incorrect params')
   }
 })
+
 
 app.delete('/items/:id', (req, res) => {
   db.deleteItem(req.params.id)
